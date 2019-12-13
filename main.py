@@ -5,14 +5,24 @@ import pathlib
 import string
 
 
-def filter_subtitle_files(file_list, file_extension):
-    for file in file_list:
+class Subtitle:
+    def __init__(self, file_extension: str):
+        self.file_extension = ".srt"
+
+    def get_file_extension(self):
+        return self.file_extension
+
+    def set_file_extension(self, new_file_extension):
+        self.file_extension = new_file_extension
+
+
+def filter_subtitle_files(working_dir_file_list, file_extension):
+    for file in working_dir_file_list:
         if str(file.name).endswith(file_extension):
             return file.name
 
 
-def find_subtitle_file():
-    file_extension = set_subtitle_extension(".srt")
+def find_subtitle_file_with_extension(file_extension):
     working_dir_file_list = get_list_of_files_in_dir()
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
@@ -38,24 +48,20 @@ def read_file_contents(loaded_file):
     return loaded_file_contents
 
 
-def read_file_contents_by_line(loaded_file, line_number):
+def read_file_contents_by_line(loaded_file, line_number: int):
     loaded_file_line = loaded_file.readlines(line_number)
     return loaded_file_line
 
 
-def read_file_contents_by_line_range(loaded_file, line_start, line_end):
-    print("fixme") # fixme
-    # for _ in range(line_start, line_end):
-        # loaded_file_line_range.append(loaded_file.readlines(_))
-    # return loaded_file_line_range
-
-
-def read_line_from_sub_file(sub_file: str, line_number: int):
-    print("do nothing")
+def read_file_contents_by_line_range(loaded_file, line_start: int, line_end: int):
+    loaded_file_line_range = loaded_file
+    for _ in range(line_start, line_end):
+        print(_)
+    return loaded_file_line_range
 
 
 def set_subtitle_extension(file_extension):
-    return file_extension  # fixme this makes no sense
+    return file_extension  # fixme this makes no sense in current structure
 
 
 def set_subtitle_dir(dir_path: str):
@@ -75,8 +81,9 @@ def set_subtitle_dir(dir_path: str):
 # dev-future : present the option to shift subtitle forward or back in time
 # dev-in-progress : present the option to input an integer time shift
 # dev-future : present the option to input a decimal time shift
+sub_file = Subtitle(".srt")
+sub_ext = sub_file.get_file_extension()
+print("The active subtitle file is : " + str(sub_ext))
+load_subtitle_file(find_subtitle_file_with_extension(sub_ext))
 
-subtitle_filename = find_subtitle_file()
-print("The subtitle file being operated on is : " + str(subtitle_filename))
-load_subtitle_file(subtitle_filename)
 # end
