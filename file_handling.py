@@ -1,6 +1,4 @@
-import glob
 import re
-import shutil
 import pathlib
 import string
 
@@ -23,16 +21,14 @@ def filter_subtitle_files(working_dir_file_list, file_extension):
             return file.name
 
 
-def find_subtitle_file_with_extension(file_extension):
-    # todo cwd limitation is restrictive? make a decision on this
+def find_subtitle_file_with_extension(file_extension):  # todo cwd limitation is restrictive
     # deprecated # working_dir_file_list = os.scandir(os.getcwd())
     # returns files in cwd according to glob pattern
     working_dir_file_list = pathlib.Path.glob(pathlib.Path.cwd(), "*")
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
 
-def open_subtitle_file(filename: str):
-    # todo check the file exists to avoid future errors
+def open_subtitle_file(filename: str):  # todo check file exists
     print(read_file_contents(filename))
     # debug # print(read_file_contents(loaded_file))
     # debug # print(read_file_contents_by_line_range(loaded_file, line_start=10, line_end=13))
@@ -41,7 +37,7 @@ def open_subtitle_file(filename: str):
 
 
 def read_file_contents(filename: str):
-    with open(filename, "r") as loaded_file:  # todo confirm that with-indent closes the file
+    with open(filename, "r") as loaded_file:
         return repr(loaded_file.read())
 
 
@@ -59,9 +55,11 @@ def read_file_contents_by_line_range(loaded_file, line_start: int, line_end: int
     return loaded_file_line_range
 
 
-def set_subtitle_extension(file_extension):
-    return file_extension  # fixme this makes no sense in current structure
+def set_subtitle_extension(file_extension):  # fixme makes no sense, delete or make useful
+    return file_extension
 
 
-def set_subtitle_dir(dir_path: str):
-    os.chdir(dir_path)
+def set_subtitle_dir(dir_path: str):  # todo untested
+    # is this better? # os.chdir(dir_path)
+    cwd_path = pathlib.Path(dir_path)
+    pathlib.Path(cwd_path)
