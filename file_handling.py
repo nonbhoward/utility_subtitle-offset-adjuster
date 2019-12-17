@@ -23,14 +23,15 @@ def filter_subtitle_files(working_dir_file_list, file_extension):
 
 def find_subtitle_file_with_extension(file_extension):  # todo cwd limitation is restrictive
     # deprecated # working_dir_file_list = os.scandir(os.getcwd())
-    # returns files in cwd according to glob pattern
+    # returns files in cwd according to glob(path, pattern)
     working_dir_file_list = pathlib.Path.glob(pathlib.Path.cwd(), "*")
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
 
 def open_subtitle_file(filename: str):  # todo check file exists
-    print(read_file_contents(filename))
-    # debug # print(read_file_contents(loaded_file))
+    # debug # print(read_file_contents(filename))
+    for _ in range(15, 20):
+        print(read_file_contents_by_line(filename, _))
     # debug # print(read_file_contents_by_line_range(loaded_file, line_start=10, line_end=13))
     print("Debug : Reading from filename " + str(filename))
     return None
@@ -41,10 +42,11 @@ def read_file_contents(filename: str):
         return repr(loaded_file.read())
 
 
-def read_file_contents_by_line(loaded_file, line_number: int):
-    for line in loaded_file.readline():
-        print(line)
-    # return loaded_file_line
+def read_file_contents_by_line(filename, line_number: int):
+    with open(filename, "r") as loaded_file:
+        for line in loaded_file:
+            if line.index == line_number:
+                print(repr(loaded_file.readline()))
 
 
 def read_file_contents_by_line_range(loaded_file, line_start: int, line_end: int):
