@@ -1,8 +1,9 @@
 from file_handling import *
 
 sub_file = Subtitle(".srt")
-open_subtitle_file(find_subtitle_file_with_extension(sub_file.get_file_extension()))
-print("Debug : The active subtitle extension is : " + str(sub_file.get_file_extension()))
+file_extension = sub_file.get_file_extension()
+open_subtitle_file(find_subtitle_file_with_extension(file_extension))
+print("Debug : The active subtitle extension is : " + str(file_extension))
 
 # self-notes
 # dev-decide : do you want to pass filename strings or handles?
