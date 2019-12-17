@@ -5,6 +5,8 @@ open_subtitle_file(find_subtitle_file_with_extension(sub_file.get_file_extension
 print("The active subtitle extension is : " + str(sub_file.get_file_extension()))
 
 # self-notes
+# dev-decide : do you want to pass filename strings or handles?
+# timeline
 # dev-complete : set/get a working directory
 # dev-future : browse-able directory selector?
 # dev-complete : get a list of all files in active dir
