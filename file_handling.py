@@ -29,32 +29,44 @@ def find_subtitle_file_with_extension(file_extension):  # todo cwd limitation is
 
 
 def open_subtitle_file(filename: str):  # todo check file exists
-    # debug # print(read_file_contents(filename))
-    for _ in range(15, 20):
-        print(read_file_contents_by_line(filename, _))
-    # debug # print(read_file_contents_by_line_range(loaded_file, line_start=10, line_end=13))
+    # debug # print(read_file_contents_by_filename(filename))
+    print(read_file_contents_by_line_by_filename(filename, line_number=19))
+    # debug # print(read_file_contents_by_line_range_by_filename(filename, line_start=10, line_end=13))
     print("Debug : Reading from filename " + str(filename))
     return None
 
 
-def read_file_contents(filename: str):
+def read_file_contents_by_filename(filename: str):
     with open(filename, "r") as loaded_file:
         return repr(loaded_file.read())
 
 
-def read_file_contents_by_line(filename, line_number: int):
+def read_file_contents_by_filename(filename: str):
     with open(filename, "r") as loaded_file:
-        for line in loaded_file:
-            if line.index == line_number:
-                print(repr(loaded_file.readline()))
+        return repr(loaded_file.read())
 
 
-def read_file_contents_by_line_range(loaded_file, line_start: int, line_end: int):
-    loaded_file_line_range = loaded_file
-    for _ in range(line_start, line_end):
-        print(_)
-        print(read_file_contents_by_line(loaded_file, _))
-    return loaded_file_line_range
+def read_file_contents_by_line_by_filename(filename, line_number: int):
+    version = "for"
+    if version == "while":  # todo this works but can be done better
+        with open(filename, "r") as loaded_file:
+            line = loaded_file.readline()
+            line_count = 1
+            while line:
+                if line_count == line_number:
+                    # debug # print("Line {}: {}".format(line_count, line.strip()))
+                    return line.format(line_count, line.strip())
+                line = loaded_file.readline()
+                line_count += 1
+    else:  # fixme
+        with open(filename, "r") as loaded_file:
+            for line_count, line in enumerate(loaded_file):
+                if line_count == line_number:
+                    return line.format()
+
+
+def read_file_contents_by_line_range_by_filename(loaded_file, line_start: int, line_end: int):
+    return None  # todo next
 
 
 def set_subtitle_extension(file_extension):  # fixme makes no sense, delete or make useful
