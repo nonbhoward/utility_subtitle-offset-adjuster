@@ -45,7 +45,7 @@ def read_file_contents_by_handle(filehandle):  # todo alternative to read-by-fil
     print("todo")
 
 
-def read_file_contents_by_line_by_filename(filename, line_number: int):
+def read_file_contents_by_line_by_filename(filename: str, line_number: int):
     version = "for"
     if version == "while":  # todo this works but can be done better
         with open(filename, "r") as loaded_file:
