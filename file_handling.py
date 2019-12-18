@@ -29,9 +29,9 @@ def find_subtitle_file_with_extension(file_extension):  # todo cwd limitation is
 
 
 def open_subtitle_file(filename: str):  # todo check file exists
-    # debug # print(read_file_contents_by_filename(filename))
-    print(read_file_contents_by_line_by_filename(filename, line_number=19))
-    # debug # print(read_file_contents_by_line_range_by_filename(filename, line_start=10, line_end=13))
+    # debug # print(read_file_contents_by_filename(filename)) # debug #
+    print(read_file_contents_by_line_by_filename(filename, line_number=19))  # debug #
+    # debug # print(read_file_contents_by_line_range_by_filename(filename, line_start=10, line_end=13)) # debug #
     print("Debug : Reading from filename " + str(filename))
     return None
 
