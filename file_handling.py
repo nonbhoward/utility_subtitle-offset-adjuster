@@ -41,9 +41,8 @@ def read_file_contents_by_filename(filename: str):
         return repr(loaded_file.read())
 
 
-def read_file_contents_by_filename(filename: str):
-    with open(filename, "r") as loaded_file:
-        return repr(loaded_file.read())
+def read_file_contents_by_handle(filehandle):  # todo alternative to read-by-filename, pass file object?
+    print("todo")
 
 
 def read_file_contents_by_line_by_filename(filename, line_number: int):
