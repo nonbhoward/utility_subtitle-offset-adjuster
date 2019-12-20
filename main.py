@@ -1,7 +1,7 @@
 from file_handling import *
 from timestamp_handling import *
 
-# initialize sub_file to a Subtitle class object
+# initialize subtitle_file to a Subtitle class object
 subtitle_file = Subtitle(".srt", filename="")
 file_extension = subtitle_file.get_file_extension()
 subtitle_file.filename = find_subtitle_file(file_extension)
@@ -17,7 +17,7 @@ print("Debug : The active subtitle extension is : " + str(subtitle_file.file_ext
 print("Debug : Reading from the subtitle file : " + str(subtitle_file.filename))
 
 # self-notes
-# dev-decide : do you want to pass filename strings or handles?
+# dev-decided : do you want to pass filename strings or handles? filename strings for now
 # timeline
 # dev-complete : set/get a working directory
 # dev-future : browse-able directory selector?
@@ -26,7 +26,7 @@ print("Debug : Reading from the subtitle file : " + str(subtitle_file.filename))
 # dev-future : handle dirs with more than one subtitle file
 # dev-complete : print all contents from the selected text file
 # dev-complete : print a selected line number from the selected text file
-# dev-in-progress : print a selected line range from the selected text file
+# dev-extra : print a selected line range from the selected text file
 # dev-future : present a selectable input if more than one available file
 # dev-future : present the option to shift subtitle forward or back in time
 # dev-in-progress : present the option to input an integer time shift
