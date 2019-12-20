@@ -15,7 +15,7 @@ def find_subtitle_file(file_extension):  # todo cwd limitation is restrictive
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
 
-def open_subtitle_file(filename: str):
+def open_subtitle_file(filename: str):  # fixme : this can return a string or a list, stop doing that
     sub_file = pathlib.Path(filename)
     if sub_file.exists():
         print("Debug : Reading from filename " + str(filename))
