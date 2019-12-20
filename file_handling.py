@@ -1,17 +1,7 @@
+from class_subtitle import *
 import re
 import pathlib
 import string
-
-
-class Subtitle:
-    def __init__(self, file_extension: str):
-        self.file_extension = ".srt"
-
-    def get_file_extension(self):
-        return self.file_extension
-
-    def set_file_extension(self, new_file_extension):
-        self.file_extension = new_file_extension
 
 
 def filter_subtitle_files(working_dir_file_list, file_extension):
@@ -22,18 +12,18 @@ def filter_subtitle_files(working_dir_file_list, file_extension):
 
 
 def find_subtitle_file_with_extension(file_extension):  # todo cwd limitation is restrictive
-    # deprecated # working_dir_file_list = os.scandir(os.getcwd())
     # returns files in cwd according to glob(path, pattern)
     working_dir_file_list = pathlib.Path.glob(pathlib.Path.cwd(), "*")
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
 
-def open_subtitle_file(filename: str):  # todo check file exists
-    # debug # print(read_file_contents_by_filename(filename))
-    print(read_file_contents_by_line_by_filename(filename, line_number=19))
-    # debug # print(read_file_contents_by_line_range_by_filename(filename, line_start=10, line_end=13))
-    print("Debug : Reading from filename " + str(filename))
-    return None
+def open_subtitle_file(filename: str):
+    sub_file = pathlib.Path(filename)
+    if sub_file.exists():
+        print(read_file_contents_by_filename(filename)
+        print("Debug : Reading from filename " + str(filename))
+    else:
+        print("Debug : File doesn't exist")
 
 
 def read_file_contents_by_filename(filename: str):
@@ -58,11 +48,11 @@ def read_file_contents_by_line_by_filename(filename, line_number: int):
                     return line.format(line_count, line.strip())
                 line = loaded_file.readline()
                 line_count += 1
-    else:  # fixme
+    elif version == "for":  # fixme
         with open(filename, "r") as loaded_file:
             for line_count, line in enumerate(loaded_file):
                 if line_count == line_number:
-                    return line.format()
+                    return "".format(line)
 
 
 def read_file_contents_by_line_range_by_filename(loaded_file, line_start: int, line_end: int):
