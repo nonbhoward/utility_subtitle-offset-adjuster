@@ -1,6 +1,13 @@
+﻿# #####UNPARSED TEXT EXAMPLE######
+# 1
+# 00:00:00,000 --> 00:00:00,000
+# I am a line of subtitle text
+
+# 2
+# 00:00:00,000 --> 00:00:00,000
+# I am a second line of subtitles
+# #####UNPARSED TEXT EXAMPLE######
 import re
-
-
 global delimiter
 delimiter = "-->"
 
