@@ -21,13 +21,17 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
         stripped_line = line_from_file.strip()
         line_is_iterator = _is_iterator_line(stripped_line, iteration)
         line_is_timestamp = _is_timestamp_line(stripped_line)
+        line_is_subtitle = _is_subtitle_line(not line_is_iterator, not line_is_timestamp)
+        shifted_sub.append("DEBUG : Iterator : " + str(line_is_iterator) +
+                           ", Timestamp : " + str(line_is_timestamp) +
+                           ", Subtitle : " + str(line_is_subtitle))
         if line_is_iterator:
             shifted_sub.append(stripped_line + str(_is_iterator_line))
             iteration += 1
         elif line_is_timestamp:
             # todo datetime shift function here
             shifted_sub.append(stripped_line)
-        elif _is_subtitle_line(not line_is_iterator, not line_is_timestamp):
+        elif line_is_subtitle:
             shifted_sub.append(stripped_line)
         else:
             shifted_sub.append("LINE TYPE UNKNOWN")
