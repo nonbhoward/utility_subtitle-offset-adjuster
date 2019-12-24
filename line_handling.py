@@ -26,7 +26,7 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
                            ", Timestamp : " + str(line_is_timestamp) +
                            ", Subtitle : " + str(line_is_subtitle))
         if line_is_sequence_number:
-            shifted_sub.append(stripped_line + str(_is_sequence_number))
+            shifted_sub.append(stripped_line + str(_is_sequence_number))  # fixme wrong function call syntax
             iteration += 1
         elif line_is_timestamp:
             # todo datetime shift function here
