@@ -30,7 +30,7 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
         elif _is_subtitle_line(not line_is_iterator, not line_is_timestamp):
             shifted_sub.append(stripped_line)
         else:
-            print("ERROR : Line type unknown")
+            shifted_sub.append("LINE TYPE UNKNOWN")
     return shifted_sub
 
 
@@ -68,7 +68,7 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
 
 # an iterator line numbers each subtitle appearance
 def _is_iterator_line(line_from_file: str, iteration: int) -> bool:
-    if line_from_file.strip().isdigit():
+    if line_from_file.strip().isnumeric():
         if int(line_from_file) == iteration:
             return True
         else:
