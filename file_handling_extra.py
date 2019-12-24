@@ -1,6 +1,14 @@
 import pathlib
 
 
+def read_file_contents_as_string(filename: str) -> str:
+    try:
+        with open(filename, "r") as loaded_file:
+            return loaded_file.read()
+    except FileNotFoundError as error_FNF:
+        print(error_FNF)
+        
+        
 def read_file_contents_by_line_by_filename(filename, line_number: int):
     version = "for"
     if version == "while":  # todo this works but can be done better
