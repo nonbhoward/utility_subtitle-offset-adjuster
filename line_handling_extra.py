@@ -1,21 +1,17 @@
-# unused but not deleted yet
+from line_handling import _fetch_hours_from_timestamp
+from line_handling import _fetch_minutes_from_timestamp
+from line_handling import _fetch_seconds_from_timestamp
+from line_handling import _fetch_millis_from_timestamp
+from line_handling import _is_timestamp_line
 
 
-def find_hours(timestamp_line: str):
-    hours = timestamp_line
-    return hours
+def _build_zipped_timestamps(file_contents: list) -> zip:  # only a test
+    hour_list, minute_list, second_list, milli_list = [], [], [], []
+    for line_from_file in file_contents:
+        if _is_timestamp_line(line_from_file):
+            hour_list.append(_fetch_hours_from_timestamp(line_from_file))
+            minute_list.append(_fetch_minutes_from_timestamp(line_from_file))
+            second_list.append(_fetch_seconds_from_timestamp(line_from_file))
+            milli_list.append(_fetch_millis_from_timestamp(line_from_file))
+    return zip(hour_list, minute_list, second_list, milli_list)
 
-
-def find_milliseconds(timestamp_line: str):
-    milliseconds = timestamp_line
-    return milliseconds
-
-
-def find_minutes(timestamp_line: str):
-    minutes = timestamp_line
-    return minutes
-
-
-def find_seconds(timestamp_line: str):
-    seconds = timestamp_line
-    return seconds

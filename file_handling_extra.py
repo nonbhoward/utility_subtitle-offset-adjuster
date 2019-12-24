@@ -1,3 +1,6 @@
+import pathlib
+
+
 def read_file_contents_by_line_by_filename(filename, line_number: int):
     version = "for"
     if version == "while":  # todo this works but can be done better
@@ -17,11 +20,11 @@ def read_file_contents_by_line_by_filename(filename, line_number: int):
                     return "".format(line)
 
 
-def read_file_contents_by_line_range_by_filename(loaded_file, line_start: int, line_end: int):
-    return None  # todo next
+def read_file_contents_by_line_range_by_filename(loaded_file, line_start: int, line_end: int) -> list:
+    return None  # todo maybe later if needed
 
 
-def set_subtitle_dir(dir_path: str):  # todo untested
+def set_subtitle_dir(dir_path: str):  # todo return type?  # todo untested function
     # is this better? # os.chdir(dir_path)
     cwd_path = pathlib.Path(dir_path)
     pathlib.Path(cwd_path)
