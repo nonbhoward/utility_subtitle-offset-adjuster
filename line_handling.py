@@ -71,7 +71,7 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
 
 
 # an iterator line numbers each subtitle appearance
-def _is_iterator_line(line_from_file: str, iteration: int) -> bool:
+def _is_iterator_line(line_from_file: str, iteration: int) -> bool:  # fixme this is never true
     if line_from_file.strip().isnumeric():
         if int(line_from_file) == iteration:
             return True
