@@ -1,20 +1,15 @@
 from file_handling import *
-from timestamp_handling import *
+from line_handling import *
 
-# initialize subtitle_file to a Subtitle class object
-subtitle_file = Subtitle(".srt", filename="")
-file_extension = subtitle_file.get_file_extension()
-subtitle_file.filename = find_subtitle_file(file_extension)
-file_contents = open_subtitle_file(subtitle_file.filename)
-for line_from_file in file_contents:
-    if find_timestamp_line(line_from_file) is not None:
-        hours_from_line = filter_hours(line_from_file)
-        minutes_from_line = filter_minutes(line_from_file)
-        seconds_from_line = filter_seconds(line_from_file)
-        millis_from_line = filter_milliseconds(line_from_file)
-        print(hours_from_line + minutes_from_line + seconds_from_line + millis_from_line)
+subtitle_file = Subtitle(".srt", filename="")  # initialize Subtitle() object
+file_extension = subtitle_file.get_file_extension()  # assigns the file extension to a variable
+subtitle_file.filename = find_subtitle_file(file_extension)  # the file name to be read
+file_contents = open_subtitle_file(subtitle_file.filename)  # a list of each read line
+# ... begin construction zone ... #
+print("Debug : Building shifted timestamp")
+print(build_shifted_subtitle(file_contents, time_shift=0))
 print("Debug : The active subtitle extension is : " + str(subtitle_file.file_extension))
-print("Debug : Reading from the subtitle file : " + str(subtitle_file.filename))
+print("Debug : Stopped reading from filename : " + str(subtitle_file.filename))
 
 # self-notes
 # dev-decided : do you want to pass filename strings or handles? filename strings for now
