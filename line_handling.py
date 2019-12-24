@@ -19,14 +19,14 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     iteration = 1
     for line_from_file in file_contents:
         stripped_line = line_from_file.strip()
-        line_is_iterator = _is_iterator_line(stripped_line, iteration)
+        line_is_sequence_number = _is_sequence_number(stripped_line, iteration)
         line_is_timestamp = _is_timestamp_line(stripped_line)
-        line_is_subtitle = _is_subtitle_line(not line_is_iterator, not line_is_timestamp)
-        shifted_sub.append("DEBUG : Iterator : " + str(line_is_iterator) +
+        line_is_subtitle = _is_subtitle_line(not line_is_sequence_number, not line_is_timestamp)
+        shifted_sub.append("DEBUG : Iterator : " + str(line_is_sequence_number) +
                            ", Timestamp : " + str(line_is_timestamp) +
                            ", Subtitle : " + str(line_is_subtitle))
-        if line_is_iterator:
-            shifted_sub.append(stripped_line + str(_is_iterator_line))
+        if line_is_sequence_number:
+            shifted_sub.append(stripped_line + str(_is_sequence_number))
             iteration += 1
         elif line_is_timestamp:
             # todo datetime shift function here
@@ -71,9 +71,9 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
 
 
 # an iterator line numbers each subtitle appearance
-def _is_iterator_line(line_from_file: str, iteration: int) -> bool:  # fixme this is never true
+def _is_sequence_number(line_from_file: str, sequence: int) -> bool:  # fixme this is never true
     if line_from_file.strip().isnumeric():
-        if int(line_from_file) == iteration:
+        if int(line_from_file) == sequence:
             return True
         else:
             return False
