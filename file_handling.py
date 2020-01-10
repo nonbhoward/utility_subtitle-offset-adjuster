@@ -1,4 +1,5 @@
 from Subtitle import *
+from os_check import *
 import pathlib
 
 
@@ -10,8 +11,14 @@ def filter_subtitle_files(working_dir_file_list, file_extension) -> str:
 
 
 def find_subtitle_file(file_extension) -> str:  # todo cwd limitation is restrictive
-    # returns files in cwd according to glob(path, pattern)
-    working_dir_file_list = pathlib.Path.glob(pathlib.Path.cwd(), "*")
+    working_dir = pathlib.Path.cwd()  # get current working directory
+    if get_os() == "Windows":
+        print("Debug : I see Windows!")
+        
+    else:  # linux understands glob, which i suspect was the issue? todo tbd
+        print("Debug : I see !Windows!")
+        # returns files in cwd according to glob(path, pattern)
+        working_dir_file_list = pathlib.Path.glob(working_dir, "*")
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
 
