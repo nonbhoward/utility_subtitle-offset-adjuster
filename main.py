@@ -2,9 +2,13 @@ from file_handling import *
 from line_handling import *
 
 subtitle_file = Subtitle(".srt", filename="")  # initialize Subtitle() object
+print("Debug : The Subtitle Class object has been initialized.")
 file_extension = subtitle_file.get_file_extension()  # assigns the file extension to a variable
+print("Debug : The file extension is " + str(file_extension) + ".")
 subtitle_file.filename = find_subtitle_file(file_extension)  # the file name to be read
+print("Debug : The subtitle filename is " + str(subtitle_file.filename) + ".")
 file_contents = open_subtitle_file(subtitle_file.filename)  # a list of each read line
+print("Debug : The file_contents have been loaded.")
 # ... begin construction zone ... #
 print("Debug : Building shifted timestamp")
 print(build_shifted_subtitle(file_contents, time_shift=0))
