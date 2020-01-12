@@ -1,28 +1,23 @@
 from Subtitle import *
 from os_check import *
-import pathlib
+import pathlib, os
 
 
-def filter_subtitle_files(working_dir_file_list, file_extension) -> str:
+def filter_subtitle_files(working_dir_file_list: list, file_extension: str) -> str:
     sub_file = Subtitle(file_extension, filename="")
     for file in working_dir_file_list:
-        if str(file.name).endswith(sub_file.get_file_extension()):
-            return file.name
+        # iterate over files in cwd, use str.lower() for comparison
+        if str(file).lower().endswith(sub_file.get_file_extension()):
+            return str(file)
 
 
-def find_subtitle_file(file_extension) -> str:  # todo cwd limitation is restrictive
-    working_dir = pathlib.Path.cwd()  # get current working directory
-    if get_os() == "Windows":
-        print("Debug : I see Windows!")
-        
-    else:  # linux understands glob, which i suspect was the issue? todo tbd
-        print("Debug : I see !Windows!")
-        # returns files in cwd according to glob(path, pattern)
-        working_dir_file_list = pathlib.Path.glob(working_dir, "*")
+def find_subtitle_file(file_extension) -> list:  # todo cwd limitation is restrictive
+    working_dir = os.getcwd()  # get current working directory aka 'cwd'
+    working_dir_file_list = os.listdir(working_dir)  # get list() of files in cwd
     return filter_subtitle_files(working_dir_file_list, file_extension)
 
 
-def open_subtitle_file(filename: str) -> list:
+def open_subtitle_file(filename: list) -> list:
     sub_file = pathlib.Path(filename)
     print("Debug : Started reading from filename : " + str(filename))
     # debug # file_contents = read_file_contents(filename)
