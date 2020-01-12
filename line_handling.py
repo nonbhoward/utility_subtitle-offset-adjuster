@@ -9,7 +9,8 @@
 #
 # 3
 # #####UNPARSED TEXT EXAMPLE######
-import datetime, re
+import datetime
+import re
 global delimiter
 delimiter = "-->"
 
@@ -19,15 +20,14 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     iteration = 1
     for line_from_file in file_contents:
         stripped_line = line_from_file.strip()
-        line_is_iterator = _is_iterator_line(stripped_line, iteration)
+        line_is_sequence = _is_sequence_line(stripped_line)
         line_is_timestamp = _is_timestamp_line(stripped_line)
-        if line_is_iterator:
-            shifted_sub.append(stripped_line + str(_is_iterator_line))
-            iteration += 1
+        if line_is_sequence:
+            shifted_sub.append(stripped_line)
         elif line_is_timestamp:
             # todo datetime shift function here
             shifted_sub.append(stripped_line)
-        elif _is_subtitle_line(not line_is_iterator, not line_is_timestamp):
+        elif _is_subtitle_line(stripped_line):
             shifted_sub.append(stripped_line)
         else:
             shifted_sub.append("LINE TYPE UNKNOWN")
@@ -67,17 +67,18 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
 
 
 # an iterator line numbers each subtitle appearance
-def _is_iterator_line(line_from_file: str, iteration: int) -> bool:
-    if line_from_file.strip().isnumeric():
-        if int(line_from_file) == iteration:
-            return True
-        else:
-            return False
+def _is_sequence_line(line_from_file: str) -> bool:
+    sequence_num_regex = "(^[\d]+[^\d\d:])"  # match any number (+) of \d AND do NOT (^) match \d\d:
+    if re.match(sequence_num_regex, line_from_file):
+        return True
+    else:
+        return False
 
 
 # a subtitle line contains a subtitle to be displayed (or an empty line?)  # fixme handle empty lines better
-def _is_subtitle_line(line_not_iterator: bool, line_not_timestamp: bool) -> bool:
-    if line_not_iterator and line_not_timestamp:
+def _is_subtitle_line(line_from_file: str) -> bool:
+    regex_subtitle = ""
+    if re.match(regex_subtitle, line_from_file):
         return True
     else:
         return False
@@ -85,11 +86,8 @@ def _is_subtitle_line(line_not_iterator: bool, line_not_timestamp: bool) -> bool
 
 # a timestamp line contains two timestamps: a start-time and a stop-time between which a subtitle will be displayed
 def _is_timestamp_line(line_from_file: str) -> bool:
-    if line_from_file.count(":") == 4 and \
-            line_from_file.count(",") == 2 and \
-            line_from_file.count("-->") == 1:
-        return True  # this is a timestamp line
+    regex_timestamp = ""
+    if re.match(regex_timestamp, line_from_file):
+        return True
     else:
-        return False  # this is NOT a timestamp line
-
-
+        return False
