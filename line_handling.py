@@ -26,7 +26,7 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
                            ", Timestamp : " + str(line_is_timestamp) +
                            ", Subtitle : " + str(line_is_subtitle))
         if line_is_sequence_number:
-            shifted_sub.append(stripped_line + str(_is_sequence_number))  # fixme wrong function call syntax
+            shifted_sub.append(stripped_line + str(_is_sequence_number()))  # fixme wrong function call syntax
             iteration += 1
         elif line_is_timestamp:
             # todo datetime shift function here
@@ -72,28 +72,18 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
 
 # an iterator line numbers each subtitle appearance
 def _is_sequence_number(line_from_file: str, sequence: int) -> bool:  # fixme this is never true
-    if line_from_file.strip().isnumeric():
-        if int(line_from_file) == sequence:
-            return True
-        else:
-            return False
+    regex_sequence_number = ""
+    return False
 
 
 # a subtitle line contains a subtitle to be displayed (or an empty line?)  # fixme handle empty lines better
 def _is_subtitle_line(line_not_iterator: bool, line_not_timestamp: bool) -> bool:
-    if line_not_iterator and line_not_timestamp:
-        return True
-    else:
-        return False
+    regex_subtitle_line = ""
+    return False
 
 
 # a timestamp line contains two timestamps: a start-time and a stop-time between which a subtitle will be displayed
 def _is_timestamp_line(line_from_file: str) -> bool:
-    if line_from_file.count(":") == 4 and \
-            line_from_file.count(",") == 2 and \
-            line_from_file.count("-->") == 1:
-        return True  # this is a timestamp line
-    else:
-        return False  # this is NOT a timestamp line
-
+    regex_timestamp_line = ""
+    return False
 
