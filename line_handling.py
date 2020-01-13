@@ -28,7 +28,7 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
             # todo datetime shift function here
             shifted_sub.append(stripped_line)
         elif _is_subtitle_line(stripped_line):
-            shifted_sub.append(stripped_line)
+           shifted_sub.append(stripped_line)
         else:
             shifted_sub.append("LINE TYPE UNKNOWN")
     return shifted_sub
@@ -91,3 +91,4 @@ def _is_timestamp_line(line_from_file: str) -> bool:
         return True
     else:
         return False
+

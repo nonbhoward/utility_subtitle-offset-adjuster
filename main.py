@@ -12,6 +12,12 @@ print("Debug : The file_contents have been loaded.")
 # ... begin construction zone ... #
 print("Debug : Building shifted timestamp")
 print(build_shifted_subtitle(file_contents, time_shift=0))
+with open("filename.txt", "w") as f:
+    line_count = 0
+    for line in file_contents:
+        f.write(build_shifted_subtitle(file_contents, time_shift=0)[line_count])
+        f.write("\n")
+        line_count += 1
 print("Debug : The active subtitle extension is : " + str(subtitle_file.file_extension))
 print("Debug : Stopped reading from filename : " + str(subtitle_file.filename))
 
