@@ -20,15 +20,13 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     shifted_sub = []
     for line_from_file in file_contents:
         stripped_line = line_from_file.strip()
-        line_is_sequence = _is_sequence_line(stripped_line)
-        line_is_timestamp = _is_timestamp_line(stripped_line)
-        if line_is_sequence:
+        if _is_sequence_line(stripped_line):
             shifted_sub.append(stripped_line)
-        elif line_is_timestamp:
+        elif _is_timestamp_line(stripped_line):
             # todo datetime shift function here
             shifted_sub.append(stripped_line)
         elif _is_subtitle_line(stripped_line):
-           shifted_sub.append(stripped_line)
+            shifted_sub.append(stripped_line)
         else:
             shifted_sub.append("LINE TYPE UNKNOWN")
     return shifted_sub
