@@ -1,6 +1,6 @@
 from Subtitle import *
 from os_check import *
-import pathlib, os
+import pathlib
 
 
 def filter_subtitle_files(working_dir_file_list: list, file_extension: str) -> str:
@@ -11,7 +11,7 @@ def filter_subtitle_files(working_dir_file_list: list, file_extension: str) -> s
             return str(file)
 
 
-def find_subtitle_file(file_extension) -> list:  # todo cwd limitation is restrictive
+def find_subtitle_file(file_extension: str) -> list:  # todo cwd limitation is restrictive
     working_dir = os.getcwd()  # get current working directory aka 'cwd'
     working_dir_file_list = os.listdir(working_dir)  # get list() of files in cwd
     return filter_subtitle_files(working_dir_file_list, file_extension)
@@ -31,7 +31,4 @@ def read_file_contents_as_list(filename: str) -> list:
             return loaded_file.readlines()
     except FileNotFoundError as error_FNF:
         print(error_FNF)
-
-
-
 
