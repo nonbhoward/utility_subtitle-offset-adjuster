@@ -11,13 +11,13 @@
 # #####UNPARSED TEXT EXAMPLE######
 import datetime
 import re
+
 global delimiter
 delimiter = "-->"
 
 
 def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     shifted_sub = []
-    iteration = 1
     for line_from_file in file_contents:
         stripped_line = line_from_file.strip()
         line_is_sequence = _is_sequence_line(stripped_line)
@@ -68,8 +68,8 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
 
 # an iterator line numbers each subtitle appearance
 def _is_sequence_line(line_from_file: str) -> bool:
-    sequence_num_regex = "(^[\d]+[^\d\d:])"  # match any number (+) of \d AND do NOT (^) match \d\d:
-    if re.match(sequence_num_regex, line_from_file):
+    regex_sequence_number = "^[\d]+$"  # match any number (+) of \d AND do NOT (^) match \d\d:
+    if re.match(regex_sequence_number, line_from_file):
         return True
     else:
         return False
@@ -77,8 +77,8 @@ def _is_sequence_line(line_from_file: str) -> bool:
 
 # a subtitle line contains a subtitle to be displayed (or an empty line?)  # fixme handle empty lines better
 def _is_subtitle_line(line_from_file: str) -> bool:
-    regex_subtitle = ""
-    if re.match(regex_subtitle, line_from_file):
+    # regex_subtitle = ""  # todo maybe later, identifying timestamps is probably enough for program function
+    if not _is_sequence_line(line_from_file) and not _is_timestamp_line(line_from_file):
         return True
     else:
         return False
@@ -86,7 +86,7 @@ def _is_subtitle_line(line_from_file: str) -> bool:
 
 # a timestamp line contains two timestamps: a start-time and a stop-time between which a subtitle will be displayed
 def _is_timestamp_line(line_from_file: str) -> bool:
-    regex_timestamp = ""
+    regex_timestamp = "[\d]+:[\d]+:[\d]+,[\d]+\s[-]+[>]\s[\d]+:[\d]+:[\d]+,[\d]+"
     if re.match(regex_timestamp, line_from_file):
         return True
     else:
