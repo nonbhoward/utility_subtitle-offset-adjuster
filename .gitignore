@@ -1,2 +1,4 @@
 /*.srt
 /*.txt
+/.idea/*.iml
+/venv/
