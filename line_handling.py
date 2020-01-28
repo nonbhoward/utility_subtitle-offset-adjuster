@@ -11,6 +11,7 @@
 # #####UNPARSED TEXT EXAMPLE######
 import datetime
 import re
+from time_handling import shift_timestamp_by_time_shift
 
 global delimiter
 delimiter = "-->"
@@ -21,12 +22,21 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     for line_from_file in file_contents:
         stripped_line = line_from_file.strip()
         if _is_sequence_line(stripped_line):
-            shifted_sub.append(stripped_line)
+            shifted_sub.append(stripped_line)  # only to rebuild new file
         elif _is_timestamp_line(stripped_line):
+            unshifted_hours = _fetch_hours_from_timestamp(stripped_line)
+            unshifted_minutes = _fetch_minutes_from_timestamp(stripped_line)
+            unshifted_seconds = _fetch_seconds_from_timestamp(stripped_line)
+            unshifted_millis = _fetch_millis_from_timestamp(stripped_line)
             # todo datetime shift function here
+            shift_timestamp_by_time_shift(unshifted_hours,
+                                          unshifted_minutes,
+                                          unshifted_seconds,
+                                          unshifted_millis,
+                                          time_shift)
             shifted_sub.append(stripped_line)
         elif _is_subtitle_line(stripped_line):
-            shifted_sub.append(stripped_line)
+            shifted_sub.append(stripped_line)  # only to rebuild new file
         else:
             shifted_sub.append("LINE TYPE UNKNOWN")
     return shifted_sub
