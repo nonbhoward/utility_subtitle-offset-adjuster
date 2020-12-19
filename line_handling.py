@@ -13,7 +13,6 @@ import datetime
 import re
 from time_handling import shift_timestamp_by_time_shift
 
-global delimiter
 delimiter = "-->"
 
 

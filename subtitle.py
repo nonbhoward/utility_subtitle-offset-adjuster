@@ -1,7 +1,7 @@
 class Subtitle:
-    def __init__(self, file_extension: str, filename: str):
+    def __init__(self, filename=None):
         self.file_extension = ".srt"
-        self.filename = None
+        self.filename = filename
 
     def get_file_extension(self) -> str:
         return self.file_extension
@@ -9,8 +9,8 @@ class Subtitle:
     def get_filename(self) -> str:
         return self.filename
 
-    def set_file_extension(self, new_file_extension) -> str:
+    def set_file_extension(self, new_file_extension):
         self.file_extension = new_file_extension
 
-    def set_filename(self, new_filename) -> str:
+    def set_filename(self, new_filename):
         self.filename = new_filename

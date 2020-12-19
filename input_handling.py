@@ -26,6 +26,8 @@ def get_time_shift_seconds_input() -> datetime:
     time_shift = _init_datetime_object()
     try:
         time_shift.second = datetime(input("Enter desired time shift seconds using integer values : "))
+    except RuntimeError:
+        raise RuntimeError
     if time_shift.second < 0 or time_shift.second > 60:
         raise Exception
     return time_shift.second
