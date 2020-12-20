@@ -26,16 +26,16 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
             shifted_sub.append(stripped_line)  # only to rebuild new file
             current_sequence += 1
         elif _is_timestamp_line(stripped_line):
-            unshifted_hours = _fetch_hours_from_timestamp(stripped_line)
-            unshifted_minutes = _fetch_minutes_from_timestamp(stripped_line)
-            unshifted_seconds = _fetch_seconds_from_timestamp(stripped_line)
-            unshifted_millis = _fetch_millis_from_timestamp(stripped_line)
-            # todo datetime shift function here
-            shift_timestamp_by_time_shift(unshifted_hours,
-                                          unshifted_minutes,
-                                          unshifted_seconds,
-                                          unshifted_millis,
-                                          time_shift)
+            unshifted_datetime_start = datetime.datetime(year=1, month=1, day=1,
+                                                         hour=_fetch_hour_start_from_timestamp,
+                                                         minute=_fetch_minute_start_from_timestamp,
+                                                         second=_fetch_second_start_from_timestamp)
+            unshifted_datetime_stop = datetime.datetime(year=1, month=1, day=1,
+                                                        hour=_fetch_hour_stop_from_timestamp,
+                                                        minute=_fetch_minute_stop_from_timestamp,
+                                                        second=_fetch_second_stop_from_timestamp)
+            shift_datetime_by_timeshift(unshifted_datetime_start)
+            shift_datetime_by_timeshift(unshifted_datetime_stop)
             shifted_sub.append(stripped_line)
         # elif _is_subtitle_line(stripped_line):
         #     shifted_sub.append(stripped_line)  # only to rebuild new file
