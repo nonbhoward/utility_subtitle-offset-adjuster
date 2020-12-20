@@ -7,6 +7,7 @@
 # .gitignore
 
 # folders to ignore
+__pycache__/
 .idea/
 subtitles*/
 venv_*/
