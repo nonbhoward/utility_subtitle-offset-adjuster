@@ -11,17 +11,20 @@
 # #####UNPARSED TEXT EXAMPLE######
 import datetime
 import re
-from time_handling import shift_timestamp_by_time_shift
 
 delimiter = "-->"
 
 
 def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     shifted_sub = []
+    current_sequence = 1  # this iterates once each time a subtitle is displayed on the screen
     for line_from_file in file_contents:
         stripped_line = line_from_file.strip()
-        if _is_sequence_line(stripped_line):
+        if _is_empty_line(stripped_line):
+            shifted_sub.append("")
+        elif _is_sequence_line(stripped_line, current_sequence):
             shifted_sub.append(stripped_line)  # only to rebuild new file
+            current_sequence += 1
         elif _is_timestamp_line(stripped_line):
             unshifted_hours = _fetch_hours_from_timestamp(stripped_line)
             unshifted_minutes = _fetch_minutes_from_timestamp(stripped_line)
@@ -34,11 +37,25 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
                                           unshifted_millis,
                                           time_shift)
             shifted_sub.append(stripped_line)
-        elif _is_subtitle_line(stripped_line):
-            shifted_sub.append(stripped_line)  # only to rebuild new file
+        # elif _is_subtitle_line(stripped_line):
+        #     shifted_sub.append(stripped_line)  # only to rebuild new file
         else:
+            if len(shifted_sub) < 1:
+                continue
             shifted_sub.append("LINE TYPE UNKNOWN")
     return shifted_sub
+
+
+def compile_regex():
+    regex_sequence_for_empty_lines, \
+        regex_pattern_for_sequence_lines, \
+        regex_sequence_for_subtitle_lines = "^\s*$", "^\d{1,5}$", "TODO"
+    regex_empty_line, \
+        regex_sequence_line, \
+        regex_subtitle_line = re.compile(regex_sequence_for_empty_lines), \
+                              re.compile(regex_pattern_for_sequence_lines), \
+                              re.compile(regex_sequence_for_subtitle_lines)
+    return regex_empty_line, regex_sequence_line, regex_subtitle_line
 
 
 def _fetch_hours_from_timestamp(timestamp_line: str) -> list:
@@ -73,22 +90,27 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
     return [start_second, stop_second]
 
 
-# an iterator line numbers each subtitle appearance
-def _is_sequence_line(line_from_file: str) -> bool:
-    regex_sequence_number = "^[\d]+$"  # match any number (+) of \d AND do NOT (^) match \d\d:
-    if re.match(regex_sequence_number, line_from_file):
+def _is_empty_line(line_from_file: str) -> bool:
+    if empty_line_finder.search(line_from_file):
         return True
-    else:
-        return False
+    return False
+
+
+def _is_sequence_line(line_from_file: str, current_sequence: int) -> bool:
+    # TODO for some reason if the line being checked is the first line in the file, this test fails
+    found = sequence_line_finder.search(line_from_file)
+    if found:
+        if int(line_from_file) == current_sequence:
+            return True
+    return False
 
 
 # a subtitle line contains a subtitle to be displayed (or an empty line?)  # fixme handle empty lines better
 def _is_subtitle_line(line_from_file: str) -> bool:
-    # regex_subtitle = ""  # todo maybe later, identifying timestamps is probably enough for program function
+    found = subtitle_line.match(line_from_file)
     if not _is_sequence_line(line_from_file) and not _is_timestamp_line(line_from_file):
         return True
-    else:
-        return False
+    return False
 
 
 # a timestamp line contains two timestamps: a start-time and a stop-time between which a subtitle will be displayed
@@ -96,6 +118,7 @@ def _is_timestamp_line(line_from_file: str) -> bool:
     regex_timestamp = "[\d]+:[\d]+:[\d]+,[\d]+\s[-]+[>]\s[\d]+:[\d]+:[\d]+,[\d]+"
     if re.match(regex_timestamp, line_from_file):
         return True
-    else:
-        return False
+    return False
 
+
+empty_line_finder, sequence_line_finder, subtitle_line = compile_regex()

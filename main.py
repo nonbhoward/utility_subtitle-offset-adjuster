@@ -3,9 +3,8 @@ from line_handling import *
 
 sf = Subtitle()
 sf.filename = find_subtitle_file(sf.get_file_extension())
-file_contents = open_subtitle_file(sf.filename)
-# ... begin construction zone ... #
-print(build_shifted_subtitle(file_contents, time_shift=0))
+sf.unshifted = open_subtitle_file(sf.filename)
+sf.shifted = build_shifted_subtitle(sf.unshifted, time_shift=0)
 with open("filename.txt", "w") as f:
     print("write some stuff here..")
 print("Debug : The active subtitle extension is : " + str(sf.file_extension))
