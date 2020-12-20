@@ -19,6 +19,6 @@ def second_has_millis(second):
     return False
 
 
-def shift_timestamp_by_time_shift(unshifted_datetime: datetime) -> datetime:
+def shift_datetime_by_timeshift(unshifted_datetime: datetime) -> datetime:
     dt = datetime
     return dt
