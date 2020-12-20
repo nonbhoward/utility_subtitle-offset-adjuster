@@ -1,5 +1,4 @@
 from subtitle import *
-from os_check import *
 import os
 import pathlib
 import sys

@@ -1,10 +1,12 @@
 from file_handling import *
 from line_handling import *
+from time_handling import *
 
 sf = Subtitle()
 sf.filename = find_subtitle_file(sf.get_file_extension())
 sf.unshifted = open_subtitle_file(sf.filename)
-sf.shifted = build_shifted_subtitle(sf.unshifted, time_shift=0)
+sf.timeshift = get_datetime_timeshift(hour=0, minute=0, second=15.01)
+sf.shifted = build_shifted_subtitle(sf.unshifted, time_shift=sf.timeshift)
 with open("filename.txt", "w") as f:
     print("write some stuff here..")
 print("Debug : The active subtitle extension is : " + str(sf.file_extension))

@@ -47,14 +47,16 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
 
 
 def compile_regex():
-    regex_sequence_for_empty_lines, \
+    regex_pattern_for_empty_lines, \
         regex_pattern_for_sequence_lines, \
-        regex_sequence_for_subtitle_lines = "^\s*$", "^\d{1,5}$", "TODO"
+        regex_pattern_for_subtitle_lines = "^\s*$", \
+                                           "^\d{1,5}$", \
+                                           "[\d]+:[\d]+:[\d]+,[\d]+\s[-]+[>]\s[\d]+:[\d]+:[\d]+,[\d]+"
     regex_empty_line, \
         regex_sequence_line, \
-        regex_subtitle_line = re.compile(regex_sequence_for_empty_lines), \
+        regex_subtitle_line = re.compile(regex_pattern_for_empty_lines), \
                               re.compile(regex_pattern_for_sequence_lines), \
-                              re.compile(regex_sequence_for_subtitle_lines)
+                              re.compile(regex_pattern_for_subtitle_lines)
     return regex_empty_line, regex_sequence_line, regex_subtitle_line
 
 
@@ -98,8 +100,7 @@ def _is_empty_line(line_from_file: str) -> bool:
 
 def _is_sequence_line(line_from_file: str, current_sequence: int) -> bool:
     # TODO for some reason if the line being checked is the first line in the file, this test fails
-    found = sequence_line_finder.search(line_from_file)
-    if found:
+    if sequence_line_finder.search(line_from_file):
         if int(line_from_file) == current_sequence:
             return True
     return False
@@ -115,8 +116,7 @@ def _is_subtitle_line(line_from_file: str) -> bool:
 
 # a timestamp line contains two timestamps: a start-time and a stop-time between which a subtitle will be displayed
 def _is_timestamp_line(line_from_file: str) -> bool:
-    regex_timestamp = "[\d]+:[\d]+:[\d]+,[\d]+\s[-]+[>]\s[\d]+:[\d]+:[\d]+,[\d]+"
-    if re.match(regex_timestamp, line_from_file):
+    if subtitle_line.search(line_from_file):
         return True
     return False
 
