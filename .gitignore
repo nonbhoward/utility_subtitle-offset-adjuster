@@ -1,4 +1,12 @@
+# extensions to ignore
 /*.srt
 /*.txt
-/.idea/*.iml
-/venv/
+/*.xml
+
+# files to ignore
+# .gitignore
+
+# folders to ignore
+.idea/
+subtitles*/
+venv_*/
