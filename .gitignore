@@ -1,4 +1,5 @@
 # extensions to ignore
+/*.log
 /*.srt
 /*.txt
 /*.xml
