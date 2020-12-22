@@ -8,7 +8,8 @@ sf.unshifted = open_subtitle_file(sf.filename)
 sf.timeshift = get_datetime_timeshift(hour=0, minute=0, second=15.01)
 sf.shifted = build_shifted_subtitle(sf.unshifted, time_shift=sf.timeshift)
 with open("filename.txt", "w") as f:
-    print("write some stuff here..")
+    for shifted_line in sf.shifted:
+        f.writelines(shifted_line + '\n')
 print("Debug : The active subtitle extension is : " + str(sf.file_extension))
 print("Debug : Stopped reading from filename : " + str(sf.filename))
 

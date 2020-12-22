@@ -41,12 +41,13 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
                                                             _fetch_minutes_from_timestamp(line_from_file)),
                                                         second=_fetch_seconds_stop_from_timestamp(
                                                             _fetch_seconds_from_timestamp(line_from_file)))
-            shifted_datetime_start = shift_datetime_by_timeshift(unshifted_datetime_start)
-            shifted_datetime_stop = shift_datetime_by_timeshift(unshifted_datetime_stop)
+            shifted_datetime_start = shift_datetime_by_timeshift(unshifted_datetime_start, time_shift)
+            shifted_datetime_stop = shift_datetime_by_timeshift(unshifted_datetime_stop, time_shift)
             shifted_timestamp_line = \
                 rebuild_shifted_datetime_to_timestamp(shifted_datetime_start, shifted_datetime_stop)
-        # elif _is_subtitle_line(stripped_line):
-        #     shifted_sub.append(stripped_line)  # only to rebuild new file
+            shifted_sub.append(shifted_timestamp_line)
+        elif _is_subtitle_line(stripped_line):
+            shifted_sub.append(stripped_line)  # only to rebuild new file
         else:
             if len(shifted_sub) < 1:
                 continue
@@ -69,14 +70,17 @@ def compile_regex():
 
 
 def _fetch_hour_start_from_timestamp(hours: list) -> int:
-    test = hours[0].replace('\'', '')
-    test = test.replace('[', '')
-    test = int(test.replace(']', ''))
-    return test
+    stripped_hour = hours[0].replace('\'', '')
+    stripped_hour = stripped_hour.replace('[', '')
+    stripped_hour = int(stripped_hour.replace(']', ''))
+    return stripped_hour
 
 
 def _fetch_hour_stop_from_timestamp(hours: list) -> int:
-    return int(hours[1])
+    stripped_hour = hours[1].replace('\'', '')
+    stripped_hour = stripped_hour.replace('[', '')
+    stripped_hour = int(stripped_hour.replace(']', ''))
+    return stripped_hour
 
 
 def _fetch_hours_from_timestamp(timestamp_line: str) -> list:
@@ -94,11 +98,17 @@ def _fetch_millis_from_timestamp(timestamp_line: str) -> list:
 
 
 def _fetch_minutes_start_from_timestamp(minutes: list) -> int:
-    return int(minutes[0])
+    stripped_minute = minutes[0].replace('\'', '')
+    stripped_minute = stripped_minute.replace('[', '')
+    stripped_minute = int(stripped_minute.replace(']', ''))
+    return stripped_minute
 
 
 def _fetch_minutes_stop_from_timestamp(minutes: list) -> int:
-    return int(minutes[0])
+    stripped_minute = minutes[1].replace('\'', '')
+    stripped_minute = stripped_minute.replace('[', '')
+    stripped_minute = int(stripped_minute.replace(']', ''))
+    return stripped_minute
 
 
 def _fetch_minutes_from_timestamp(timestamp_line: str) -> list:
@@ -111,11 +121,17 @@ def _fetch_minutes_from_timestamp(timestamp_line: str) -> list:
 
 
 def _fetch_seconds_start_from_timestamp(seconds: list) -> int:
-    return int(seconds[0])
+    stripped_seconds = seconds[0].replace('\'', '')
+    stripped_seconds = stripped_seconds.replace('[', '')
+    stripped_seconds = int(stripped_seconds.replace(']', ''))
+    return stripped_seconds
 
 
 def _fetch_seconds_stop_from_timestamp(seconds: list) -> int:
-    return int(seconds[0])
+    stripped_seconds = seconds[1].replace('\'', '')
+    stripped_seconds = stripped_seconds.replace('[', '')
+    stripped_seconds = int(stripped_seconds.replace(']', ''))
+    return stripped_seconds
 
 
 def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
@@ -144,7 +160,7 @@ def _is_sequence_line(line_from_file: str, current_sequence: int) -> bool:
 # a subtitle line contains a subtitle to be displayed (or an empty line?)  # fixme handle empty lines better
 def _is_subtitle_line(line_from_file: str) -> bool:
     found = subtitle_line.match(line_from_file)
-    if not _is_sequence_line(line_from_file) and not _is_timestamp_line(line_from_file):
+    if not _is_sequence_line(line_from_file, current_sequence=999) and not _is_timestamp_line(line_from_file):
         return True
     return False
 
@@ -157,7 +173,17 @@ def _is_timestamp_line(line_from_file: str) -> bool:
 
 
 def rebuild_shifted_datetime_to_timestamp(shifted_datetime_start: datetime, shifted_datetime_stop: datetime) -> str:
-    return 'todo'
+    space = " "
+    built_timestamp_start = str(f"{int(shifted_datetime_start.hour):02d}") + ":" + \
+                            str(f"{int(shifted_datetime_start.minute):02d}") + ":" + \
+                            str(f"{int(shifted_datetime_start.second):02d}") + "," + \
+                            str("000")
+    built_timestamp_stop = str(f"{int(shifted_datetime_stop.hour):02d}") + ":" + \
+                           str(f"{int(shifted_datetime_stop.minute):02d}") + ":" + \
+                           str(f"{int(shifted_datetime_stop.second):02d}") + "," + \
+                           str("000")
+    built_timestamp = built_timestamp_start + space + delimiter + space + built_timestamp_stop
+    return built_timestamp
 
 
 empty_line_finder, sequence_line_finder, subtitle_line = compile_regex()

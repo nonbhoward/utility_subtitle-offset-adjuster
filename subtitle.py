@@ -2,6 +2,7 @@ class Subtitle:
     def __init__(self, filename=None):
         self.file_extension = ".srt"
         self.filename = filename
+        self.time_shift = 0
 
     def get_file_extension(self) -> str:
         return self.file_extension

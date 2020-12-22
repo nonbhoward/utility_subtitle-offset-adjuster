@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timedelta
 
 
 def get_datetime_timeshift(hour: int, minute: int, second: int):
@@ -19,6 +20,8 @@ def second_has_millis(second):
     return False
 
 
-def shift_datetime_by_timeshift(unshifted_datetime: datetime) -> datetime:
-    dt = datetime
-    return dt
+def shift_datetime_by_timeshift(unshifted_datetime: datetime, time_shift: datetime) -> datetime:
+    shifted_timestamp = unshifted_datetime + timedelta(hours=time_shift.hour)
+    shifted_timestamp = unshifted_datetime + timedelta(minutes=time_shift.minute)
+    shifted_timestamp = unshifted_datetime + timedelta(seconds=time_shift.second)
+    return shifted_timestamp
