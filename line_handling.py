@@ -27,24 +27,9 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
             shifted_sub.append(stripped_line)  # only to rebuild new file
             current_sequence += 1
         elif _is_timestamp_line(stripped_line):
-            unshifted_datetime_start = datetime.datetime(year=1, month=1, day=1,
-                                                         hour=_fetch_hour_start_from_timestamp(
-                                                             _fetch_hours_from_timestamp(line_from_file)),
-                                                         minute=_fetch_minutes_start_from_timestamp(
-                                                             _fetch_minutes_from_timestamp(line_from_file)),
-                                                         second=_fetch_seconds_start_from_timestamp(
-                                                             _fetch_seconds_from_timestamp(line_from_file)))
-            unshifted_datetime_stop = datetime.datetime(year=1, month=1, day=1,
-                                                        hour=_fetch_hour_stop_from_timestamp(
-                                                            _fetch_hours_from_timestamp(line_from_file)),
-                                                        minute=_fetch_minutes_stop_from_timestamp(
-                                                            _fetch_minutes_from_timestamp(line_from_file)),
-                                                        second=_fetch_seconds_stop_from_timestamp(
-                                                            _fetch_seconds_from_timestamp(line_from_file)))
-            shifted_datetime_start = shift_datetime_by_timeshift(unshifted_datetime_start, time_shift)
-            shifted_datetime_stop = shift_datetime_by_timeshift(unshifted_datetime_stop, time_shift)
-            shifted_timestamp_line = \
-                rebuild_shifted_datetime_to_timestamp(shifted_datetime_start, shifted_datetime_stop)
+            unshifted_datetimes = get_datetimes(line_from_file)
+            shifted_datetimes = shift_datetimes_by_timeshift(unshifted_datetimes, time_shift)
+            shifted_timestamp_line = rebuild_shifted_datetime_to_timestamp(shifted_datetimes)
             shifted_sub.append(shifted_timestamp_line)
         elif _is_subtitle_line(stripped_line):
             shifted_sub.append(stripped_line)  # only to rebuild new file
@@ -90,6 +75,20 @@ def _fetch_hours_from_timestamp(timestamp_line: str) -> list:
     return [start_hour, stop_hour]
 
 
+def fetch_millis_start_from_timestamp(timestamp_line: list) -> int:
+    stripped_milli = timestamp_line[0].replace('\'', '')
+    stripped_milli = stripped_milli.replace('[', '')
+    stripped_milli = int(stripped_milli.replace(']', ''))
+    return stripped_milli * 1000
+
+
+def fetch_millis_stop_from_timestamp(timestamp_line: list) -> int:
+    stripped_milli = timestamp_line[1].replace('\'', '')
+    stripped_milli = stripped_milli.replace('[', '')
+    stripped_milli = int(stripped_milli.replace(']', ''))
+    return stripped_milli * 1000
+
+
 def _fetch_millis_from_timestamp(timestamp_line: str) -> list:
     regex_millisec = "\d\d\d"
     start_millisec = str(re.findall(regex_millisec, timestamp_line.split(delimiter)[0].strip()))
@@ -121,26 +120,42 @@ def _fetch_minutes_from_timestamp(timestamp_line: str) -> list:
 
 
 def _fetch_seconds_start_from_timestamp(seconds: list) -> int:
-    stripped_seconds = seconds[0].replace('\'', '')
+    stripped_seconds = seconds[0].split(',')[0]
+    stripped_seconds = stripped_seconds.replace('\'', '')
     stripped_seconds = stripped_seconds.replace('[', '')
     stripped_seconds = int(stripped_seconds.replace(']', ''))
     return stripped_seconds
 
 
 def _fetch_seconds_stop_from_timestamp(seconds: list) -> int:
-    stripped_seconds = seconds[1].replace('\'', '')
+    stripped_seconds = seconds[1].split(',')[0]
+    stripped_seconds = stripped_seconds.replace('\'', '')
     stripped_seconds = stripped_seconds.replace('[', '')
     stripped_seconds = int(stripped_seconds.replace(']', ''))
     return stripped_seconds
 
 
 def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
-    regex_sec = ":\d\d,"
+    regex_sec = ":\d{2},\d{3}"
     start_second = str(re.findall(regex_sec, timestamp_line.split(delimiter)[0].strip()))
     start_second = start_second.replace(regex_sec[0], '').replace(regex_sec[-1], '')
     stop_second = str(re.findall(regex_sec, timestamp_line.split(delimiter)[1].strip()))
     stop_second = stop_second.replace(regex_sec[0], '').replace(regex_sec[-1], '')
     return [start_second, stop_second]
+
+
+def get_datetimes(line_from_file: str) -> list:
+    dt_start = datetime.datetime(year=1, month=1, day=1,
+                                 hour=_fetch_hour_start_from_timestamp(_fetch_hours_from_timestamp(line_from_file)),
+                                 minute=_fetch_minutes_start_from_timestamp(_fetch_minutes_from_timestamp(line_from_file)),
+                                 second=_fetch_seconds_start_from_timestamp(_fetch_seconds_from_timestamp(line_from_file)),
+                                 microsecond=fetch_millis_start_from_timestamp(_fetch_millis_from_timestamp(line_from_file)))
+    dt_stop = datetime.datetime(year=1, month=1, day=1,
+                                hour=_fetch_hour_stop_from_timestamp(_fetch_hours_from_timestamp(line_from_file)),
+                                minute=_fetch_minutes_stop_from_timestamp(_fetch_minutes_from_timestamp(line_from_file)),
+                                second=_fetch_seconds_stop_from_timestamp(_fetch_seconds_from_timestamp(line_from_file)),
+                                microsecond=fetch_millis_stop_from_timestamp(_fetch_millis_from_timestamp(line_from_file)))
+    return [dt_start, dt_stop]
 
 
 def _is_empty_line(line_from_file: str) -> bool:
@@ -172,17 +187,19 @@ def _is_timestamp_line(line_from_file: str) -> bool:
     return False
 
 
-def rebuild_shifted_datetime_to_timestamp(shifted_datetime_start: datetime, shifted_datetime_stop: datetime) -> str:
+def rebuild_shifted_datetime_to_timestamp(shifted_datetimes: datetime) -> str:
     space = " "
-    built_timestamp_start = str(f"{int(shifted_datetime_start.hour):02d}") + ":" + \
-                            str(f"{int(shifted_datetime_start.minute):02d}") + ":" + \
-                            str(f"{int(shifted_datetime_start.second):02d}") + "," + \
-                            str("000")
-    built_timestamp_stop = str(f"{int(shifted_datetime_stop.hour):02d}") + ":" + \
-                           str(f"{int(shifted_datetime_stop.minute):02d}") + ":" + \
-                           str(f"{int(shifted_datetime_stop.second):02d}") + "," + \
-                           str("000")
-    built_timestamp = built_timestamp_start + space + delimiter + space + built_timestamp_stop
+    built_timestamp_start = str(f"{int(shifted_datetimes[0].hour):02d}") + ":" + \
+                            str(f"{int(shifted_datetimes[0].minute):02d}") + ":" + \
+                            str(f"{int(shifted_datetimes[0].second):02d}") + "," + \
+                            str(f"{int(shifted_datetimes[0].microsecond):02d}")
+    built_timestamp_stop = str(f"{int(shifted_datetimes[1].hour):02d}") + ":" + \
+                           str(f"{int(shifted_datetimes[1].minute):02d}") + ":" + \
+                           str(f"{int(shifted_datetimes[1].second):02d}") + "," + \
+                           str(f"{int(shifted_datetimes[1].microsecond):02d}")
+    built_timestamp = built_timestamp_start.rstrip('000') + \
+                      space + delimiter + space + \
+                      built_timestamp_stop.rstrip('000')
     return built_timestamp
 
 

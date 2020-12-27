@@ -20,8 +20,11 @@ def second_has_millis(second):
     return False
 
 
-def shift_datetime_by_timeshift(unshifted_datetime: datetime, time_shift: datetime) -> datetime:
-    shifted_timestamp = unshifted_datetime + timedelta(hours=time_shift.hour)
-    shifted_timestamp = unshifted_datetime + timedelta(minutes=time_shift.minute)
-    shifted_timestamp = unshifted_datetime + timedelta(seconds=time_shift.second)
-    return shifted_timestamp
+def shift_datetimes_by_timeshift(unshifted_datetime: datetime, time_shift: datetime) -> list:
+    shifted_timestamp_start = unshifted_datetime[0] + timedelta(hours=time_shift.hour)
+    shifted_timestamp_start = unshifted_datetime[0] + timedelta(minutes=time_shift.minute)
+    shifted_timestamp_start = unshifted_datetime[0] + timedelta(seconds=time_shift.second)
+    shifted_timestamp_stop = unshifted_datetime[1] + timedelta(hours=time_shift.hour)
+    shifted_timestamp_stop = unshifted_datetime[1] + timedelta(minutes=time_shift.minute)
+    shifted_timestamp_stop = unshifted_datetime[1] + timedelta(seconds=time_shift.second)
+    return [shifted_timestamp_start, shifted_timestamp_stop]
