@@ -24,6 +24,8 @@ def second_has_millis(second):
 
 
 def shift_datetimes_by_timeshift(unshifted_datetime: datetime, time_shift: datetime) -> list:
+    # TODO bug : seconds can only be positive
+    # TODO bug : hours and seconds cannot be entered
     shifted_timestamp_start = unshifted_datetime[0] + timedelta(hours=time_shift.hour)
     shifted_timestamp_start = unshifted_datetime[0] + timedelta(minutes=time_shift.minute)
     shifted_timestamp_start = unshifted_datetime[0] + timedelta(seconds=time_shift.second)
