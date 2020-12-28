@@ -1,7 +1,10 @@
 from file_handling import *
+from gui_handling import Interface
 from line_handling import *
 from time_handling import *
 
+interface = Interface('Select subtitle file')
+interface.launch_interface_to_get_subtitle_file()
 sf = Subtitle()
 sf.filename = find_subtitle_file(sf.get_file_extension())
 sf.unshifted = open_subtitle_file(sf.filename)
