@@ -9,6 +9,7 @@ def filter_subtitle_files(working_dir_file_list: list) -> str:
         sub_file = Subtitle()
         for file in working_dir_file_list:
             if str(file).lower().endswith(sub_file.get_file_extension()):
+                sub_file.filename = file
                 return str(file)
         print('no subtitle file found, exiting program')
         sys.exit()
