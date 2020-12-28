@@ -3,6 +3,9 @@ from datetime import timedelta
 
 
 def get_datetime_timeshift(hour: int, minute: int, second: int):
+    if not 0 <= second < 60:
+        print('exception, seconds offset must be between 0 and 60')
+        raise ArithmeticError
     if second_has_millis(second):
         second, millis = str(second).split('.', 2)[0], str(second).split('.', 2)[1]
         datetime_timeshift = datetime(year=1, month=1, day=1,
