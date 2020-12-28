@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timedelta
 
 
 def get_datetime_timeshift(hour: int, minute: int, second: int):
@@ -19,16 +20,11 @@ def second_has_millis(second):
     return False
 
 
-def shift_timestamp_by_time_shift(unshifted_hours: list,
-                                  unshifted_minutes: list,
-                                  unshifted_seconds: list,
-                                  unshifted_millis: list,
-                                  time_shift: datetime) -> datetime:
-    start_hour = datetime.hour(unshifted_hours[0])
-    stop_hour = datetime.hour(unshifted_hours[1])
-    start_minute = datetime.minute(unshifted_minutes[0])
-    stop_minute = datetime.minute(unshifted_minutes[1])
-    start_second = datetime.second(unshifted_seconds[0])
-    stop_second = datetime.second(unshifted_seconds[1])
-    start_millis = datetime.microsecond(unshifted_millis[0]*1000)
-    stop_millis = datetime.microsecond(unshifted_millis[1]*1000)
+def shift_datetimes_by_timeshift(unshifted_datetime: datetime, time_shift: datetime) -> list:
+    shifted_timestamp_start = unshifted_datetime[0] + timedelta(hours=time_shift.hour)
+    shifted_timestamp_start = unshifted_datetime[0] + timedelta(minutes=time_shift.minute)
+    shifted_timestamp_start = unshifted_datetime[0] + timedelta(seconds=time_shift.second)
+    shifted_timestamp_stop = unshifted_datetime[1] + timedelta(hours=time_shift.hour)
+    shifted_timestamp_stop = unshifted_datetime[1] + timedelta(minutes=time_shift.minute)
+    shifted_timestamp_stop = unshifted_datetime[1] + timedelta(seconds=time_shift.second)
+    return [shifted_timestamp_start, shifted_timestamp_stop]

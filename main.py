@@ -1,7 +1,9 @@
-from file_handling import *
+from file_handling import find_subtitle_file
+from file_handling import open_subtitle_file
+from file_handling import Subtitle
 from gui_handling import Interface
-from line_handling import *
-from time_handling import *
+from line_handling import build_shifted_subtitle
+from time_handling import get_datetime_timeshift
 
 interface = Interface('Select subtitle file')
 interface.launch_interface_to_get_subtitle_file()
@@ -10,8 +12,10 @@ sf.filename = find_subtitle_file(sf.get_file_extension())
 sf.unshifted = open_subtitle_file(sf.filename)
 sf.timeshift = get_datetime_timeshift(hour=0, minute=0, second=15.01)
 sf.shifted = build_shifted_subtitle(sf.unshifted, time_shift=sf.timeshift)
-with open("filename.txt", "w") as f:
-    print("write some stuff here..")
+sf.generate_output_filename()
+with open(sf.output_filename, "w") as f:
+    for shifted_line in sf.shifted:
+        f.writelines(shifted_line + '\n')
 print("Debug : The active subtitle extension is : " + str(sf.file_extension))
 print("Debug : Stopped reading from filename : " + str(sf.filename))
 
