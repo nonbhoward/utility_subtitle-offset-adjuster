@@ -1,7 +1,6 @@
 # extensions to ignore
 /*.log
 /*.srt
-/*.txt
 /*.xml
 
 # files to ignore

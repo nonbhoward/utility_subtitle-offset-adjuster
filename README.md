@@ -7,9 +7,3 @@ at the moment a graphical user interface allows the user to select a file and en
 input : a subtitle file ending in the extension .srt located in the same directory as main.py of this project  
 input : a string value entered into the interface, between 0 and 59  
 output : a modified (time-shifted) subtitle file with a filename that includes the string "_shifted"  
-
-
-# todo
-prevent users from crashing the program.. prevent self from crashing the program..  
-allow subtitles to be shifted positively (time-delay) or negatively (time-advance)  
-allow more than 60 seconds of total time-shift
