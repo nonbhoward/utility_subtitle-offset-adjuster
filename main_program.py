@@ -1,14 +1,12 @@
-# from file_handling import find_subtitle_file  # deprecated by GUI
-from file_handling import open_subtitle_file
-from file_handling import Subtitle
-from gui_handling import Interface
-from line_handling import build_shifted_subtitle
-from time_handling import get_datetime_timeshift
+from handler_functions.file_handling import open_subtitle_file
+from handler_functions.gui_handling import Interface
+from handler_functions.line_handling import build_shifted_subtitle
+from handler_functions.time_handling import get_datetime_timeshift
+from subtitle_class import Subtitle
 
 interface = Interface('Select subtitle file')
 sf = Subtitle()
 sf.filename, seconds_offset = interface.launch_interface_to_get_subtitle_file()
-# sf.filename = find_subtitle_file(sf.get_file_extension())  # deprecated by GUI
 sf.unshifted = open_subtitle_file(sf.filename)
 sf.timeshift = get_datetime_timeshift(hour=0, minute=0, second=seconds_offset)
 sf.shifted = build_shifted_subtitle(sf.unshifted, time_shift=sf.timeshift)

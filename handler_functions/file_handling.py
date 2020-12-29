@@ -1,4 +1,4 @@
-from subtitle import *
+from subtitle_class import *
 import os
 import pathlib
 import sys

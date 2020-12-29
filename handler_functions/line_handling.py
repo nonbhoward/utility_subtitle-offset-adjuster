@@ -9,7 +9,7 @@
 #
 # 3
 # #####UNPARSED TEXT EXAMPLE######
-from time_handling import *
+from handler_functions.time_handling import *
 import datetime
 import re
 
@@ -192,11 +192,11 @@ def rebuild_shifted_datetime_to_timestamp(shifted_datetimes: datetime) -> str:
     built_timestamp_start = str(f"{int(shifted_datetimes[0].hour):02d}") + ":" + \
                             str(f"{int(shifted_datetimes[0].minute):02d}") + ":" + \
                             str(f"{int(shifted_datetimes[0].second):02d}") + "," + \
-                            str(f"{int(shifted_datetimes[0].microsecond):02d}")
+                            str(f"{int(shifted_datetimes[0].microsecond):03d}")
     built_timestamp_stop = str(f"{int(shifted_datetimes[1].hour):02d}") + ":" + \
                            str(f"{int(shifted_datetimes[1].minute):02d}") + ":" + \
                            str(f"{int(shifted_datetimes[1].second):02d}") + "," + \
-                           str(f"{int(shifted_datetimes[1].microsecond):02d}")
+                           str(f"{int(shifted_datetimes[1].microsecond):03d}")
     built_timestamp = built_timestamp_start.rstrip('000') + \
                       space + delimiter + space + \
                       built_timestamp_stop.rstrip('000')

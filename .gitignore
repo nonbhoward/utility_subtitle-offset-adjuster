@@ -6,6 +6,7 @@
 
 # files to ignore
 # .gitignore
+minimalog
 
 # folders to ignore
 __pycache__/

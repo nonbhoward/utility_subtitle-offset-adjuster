@@ -63,6 +63,12 @@ class Interface:
                 [self.button_get_select()],
                 [self.button_get_cancel()]]
 
+    def _get_text(self, text_to_fetch):
+        if text_to_fetch == 'Title':
+            return 'Subtitle Shifter'
+        if text_to_fetch == 'Subtitle Window Instructions':
+            return 'Select subtitle file and a positive integer timeshift between 1 and 59'
+
     def get_window(self):
         window = pgui.Window(title=self.interface_name,
                              layout=self.layout,
@@ -74,14 +80,19 @@ class Interface:
 
     def launch_interface_to_get_subtitle_file(self):
         if len(sys.argv) == 1:
-            event, values = pgui.Window('Subtitle Shifter',
-                                        [[pgui.Text('Select subtitle file and a positive integer timeshift between 1 and 59')],
+            event, values = pgui.Window(self._get_text("Title"),
+                                        [[pgui.Text(self._get_text("Subtitle Window Instructions"))],
                                          [pgui.In(), pgui.FileBrowse(file_types=(('Subtitle files', '*.srt'),),)],
                                          [pgui.In(), pgui.Text("Offset integer")],
                                          [pgui.Open(), pgui.Cancel()]],
                                         location=self.get_window_location()).read(close=True)
-            sub_filename = values[0]
-            seconds_offset = int(values[1])
+            sub_filename, seconds_offset = values[0], values[1]
+            if event == "Cancel" or pgui.WINDOW_CLOSED:
+                sys.exit()
+            if sub_filename and seconds_offset:
+                seconds_offset = int(seconds_offset)
+            else:
+                self.launch_interface_to_get_subtitle_file()
         else:
             sub_filename = sys.argv[1]
             seconds_offset = 0
