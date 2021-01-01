@@ -1,2 +1,10 @@
-pathlib2  # via minimalog
+# # # # pip requirements # # # #
+pathlib2
 pysimplegui
+# # # # pip requirements # # # #
+
+# # # # non-pip requirements # # # #
+# sudo apt-get install python3-tk
+# git clone https://github.com/dbrannonhoward/minimalog.git
+# ln -s ../minimalog/ ./minimalog
+# # # # non-pip requirements # # # #

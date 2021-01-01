@@ -15,8 +15,6 @@ import datetime
 import re
 mlog = MinimalLog(__name__)
 
-delimiter = "-->"
-
 
 def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     sub_build_event = 'building shifted subtitle'
@@ -46,19 +44,23 @@ def build_shifted_subtitle(file_contents: list, time_shift: datetime) -> list:
     return shifted_sub
 
 
+def build_timestamp_from_datetime(built_timestamp_start: str, built_timestamp_stop: str) -> str:
+    built_timestamp = built_timestamp_start[:-3] + space + delimiter + space + built_timestamp_stop[:-3]
+    return built_timestamp
+
+
 def rebuild_shifted_datetime_to_timestamp(shifted_datetimes: datetime) -> str:
-    space = " "
-    built_timestamp_start = str(f"{int(shifted_datetimes[0].hour):02d}") + ":" + \
-                            str(f"{int(shifted_datetimes[0].minute):02d}") + ":" + \
-                            str(f"{int(shifted_datetimes[0].second):02d}") + "," + \
-                            str(f"{int(shifted_datetimes[0].microsecond):03d}")
-    built_timestamp_stop = str(f"{int(shifted_datetimes[1].hour):02d}") + ":" + \
-                           str(f"{int(shifted_datetimes[1].minute):02d}") + ":" + \
-                           str(f"{int(shifted_datetimes[1].second):02d}") + "," + \
-                           str(f"{int(shifted_datetimes[1].microsecond):03d}")
-    built_timestamp = built_timestamp_start.rstrip('000') + \
-                      space + delimiter + space + \
-                      built_timestamp_stop.rstrip('000')
+    hour_start = str(f"{int(shifted_datetimes[0].hour):02d}") + colon_no_space
+    min_start = str(f"{int(shifted_datetimes[0].minute):02d}") + colon_no_space
+    second_start = str(f"{int(shifted_datetimes[0].second):02d}") + comma
+    microsecond_start = str(f"{int(shifted_datetimes[0].microsecond):02d}")
+    hour_stop = str(f"{int(shifted_datetimes[1].hour):02d}") + colon_no_space
+    min_stop = str(f"{int(shifted_datetimes[1].minute):02d}") + colon_no_space
+    second_stop = str(f"{int(shifted_datetimes[1].second):02d}") + comma
+    microsecond_stop = str(f"{int(shifted_datetimes[1].microsecond):02d}")
+    built_timestamp_start = hour_start + min_start + second_start + microsecond_start
+    built_timestamp_stop = hour_stop + min_stop + second_stop + microsecond_stop
+    built_timestamp = build_timestamp_from_datetime(built_timestamp_start, built_timestamp_stop)
     return built_timestamp
 
 
@@ -93,7 +95,7 @@ def _fetch_hour_stop_from_timestamp(hours: list) -> int:
 
 
 def _fetch_hours_from_timestamp(timestamp_line: str) -> list:
-    regex_hour = "^\d\d"
+    regex_hour = "^\d{2}"
     start_hour = str(re.findall(regex_hour, timestamp_line.split(delimiter)[0].strip()))
     stop_hour = str(re.findall(regex_hour, timestamp_line.split(delimiter)[1].strip()))
     return [start_hour, stop_hour]
@@ -114,7 +116,7 @@ def _fetch_millis_stop_from_timestamp(timestamp_line: list) -> int:
 
 
 def _fetch_millis_from_timestamp(timestamp_line: str) -> list:
-    regex_millisec = "\d\d\d"
+    regex_millisec = "\d{3}"
     start_millisec = str(re.findall(regex_millisec, timestamp_line.split(delimiter)[0].strip()))
     stop_millisec = str(re.findall(regex_millisec, timestamp_line.split(delimiter)[1].strip()))
     return [start_millisec, stop_millisec]
@@ -135,7 +137,7 @@ def _fetch_minutes_stop_from_timestamp(minutes: list) -> int:
 
 
 def _fetch_minutes_from_timestamp(timestamp_line: str) -> list:
-    regex_minute = ":\d\d:"
+    regex_minute = ":\d{2}:"
     start_minute = str(re.findall(regex_minute, timestamp_line.split(delimiter)[0].strip()))
     start_minute = start_minute.replace(regex_minute[0], '')
     stop_minute = str(re.findall(regex_minute, timestamp_line.split(delimiter)[1].strip()))
@@ -168,17 +170,25 @@ def _fetch_seconds_from_timestamp(timestamp_line: str) -> list:
     return [start_second, stop_second]
 
 
+def _get_basic_symbols():
+    return " : ", ":", ",", "-->", " "
+
+
 def _get_datetimes(line_from_file: str) -> list:
+    hours_from_timestamp = _fetch_hours_from_timestamp(line_from_file)
+    minutes_from_timestamp = _fetch_minutes_from_timestamp(line_from_file)
+    seconds_from_timestamp = _fetch_seconds_from_timestamp(line_from_file)
+    millis_from_timestamp = _fetch_millis_from_timestamp(line_from_file)
     dt_start = datetime.datetime(year=1, month=1, day=1,
-                                 hour=_fetch_hour_start_from_timestamp(_fetch_hours_from_timestamp(line_from_file)),
-                                 minute=_fetch_minutes_start_from_timestamp(_fetch_minutes_from_timestamp(line_from_file)),
-                                 second=_fetch_seconds_start_from_timestamp(_fetch_seconds_from_timestamp(line_from_file)),
-                                 microsecond=_fetch_millis_start_from_timestamp(_fetch_millis_from_timestamp(line_from_file)))
+                                 hour=_fetch_hour_start_from_timestamp(hours_from_timestamp),
+                                 minute=_fetch_minutes_start_from_timestamp(minutes_from_timestamp),
+                                 second=_fetch_seconds_start_from_timestamp(seconds_from_timestamp),
+                                 microsecond=_fetch_millis_start_from_timestamp(millis_from_timestamp))
     dt_stop = datetime.datetime(year=1, month=1, day=1,
-                                hour=_fetch_hour_stop_from_timestamp(_fetch_hours_from_timestamp(line_from_file)),
-                                minute=_fetch_minutes_stop_from_timestamp(_fetch_minutes_from_timestamp(line_from_file)),
-                                second=_fetch_seconds_stop_from_timestamp(_fetch_seconds_from_timestamp(line_from_file)),
-                                microsecond=_fetch_millis_stop_from_timestamp(_fetch_millis_from_timestamp(line_from_file)))
+                                hour=_fetch_hour_stop_from_timestamp(hours_from_timestamp),
+                                minute=_fetch_minutes_stop_from_timestamp(minutes_from_timestamp),
+                                second=_fetch_seconds_stop_from_timestamp(seconds_from_timestamp),
+                                microsecond=_fetch_millis_stop_from_timestamp(millis_from_timestamp))
     return [dt_start, dt_stop]
 
 
@@ -198,7 +208,7 @@ def _is_sequence_line(line_from_file: str, current_sequence: int) -> bool:
 
 # a subtitle line contains a subtitle to be displayed (or an empty line?)  # fixme handle empty lines better
 def _is_subtitle_line(line_from_file: str) -> bool:
-    found = subtitle_line.match(line_from_file)
+    found = subtitle_line_finder.match(line_from_file)
     if not _is_sequence_line(line_from_file, current_sequence=999) and not _is_timestamp_line(line_from_file):
         return True
     return False
@@ -206,9 +216,10 @@ def _is_subtitle_line(line_from_file: str) -> bool:
 
 # a timestamp line contains two timestamps: a start-time and a stop-time between which a subtitle will be displayed
 def _is_timestamp_line(line_from_file: str) -> bool:
-    if subtitle_line.search(line_from_file):
+    if subtitle_line_finder.search(line_from_file):
         return True
     return False
 
 
-empty_line_finder, sequence_line_finder, subtitle_line = _compile_regex()
+empty_line_finder, sequence_line_finder, subtitle_line_finder = _compile_regex()
+colon, colon_no_space, comma, delimiter, space = _get_basic_symbols()

@@ -26,7 +26,7 @@ def find_subtitle_file(file_extension: str) -> list:  # todo cwd limitation is r
     try:
         working_dir = os.getcwd()  # get current working directory aka 'cwd'
         working_dir_file_list = os.listdir(working_dir)  # get list() of files in cwd
-        return filter_subtitle_files(working_dir_file_list)
+        return filter_subtitle_files(working_dir_file_list)  # TODO wdfl is string, should be list?
     except OSError:
         mlog.log_event('error while finding subtitle file')
         raise OSError
